@@ -1,9 +1,10 @@
 "use client";
 import QRC from "@/components/qrcode";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { useMemo } from "react";
 
-export default function Home() {
+const DisplayQRCodeAndTitle: React.FC = () => {
   const searchParams = useSearchParams();
 
   const data = useMemo(() => {
@@ -12,10 +13,12 @@ export default function Home() {
   }, [searchParams]);
 
   return (
-    <main className="flex justify-center">
+    <div className="flex justify-center">
       {data.url ? (
-        <div>
-          <div className="text-xxl font-bold align-center">{data.title}</div>
+        <div className="mt-5">
+          <div className="text-2xl font-bold justify-center text-center">
+            {data.title}
+          </div>
           <div className="flex justify-center">
             <QRC value={data.url} />
           </div>
@@ -23,6 +26,14 @@ export default function Home() {
       ) : (
         <div>{`Pas d'URL fournie`}</div>
       )}
-    </main>
+    </div>
+  );
+};
+
+export default function Home() {
+  return (
+    <Suspense>
+      <DisplayQRCodeAndTitle />
+    </Suspense>
   );
 }
